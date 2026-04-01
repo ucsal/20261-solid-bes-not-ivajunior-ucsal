@@ -1,55 +1,62 @@
-# Olimpíada de Questões - Refatoração SOLID
+# ♟️ Olimpíada de Questões — Refatoração SOLID
 
-Este projeto é um sistema de console para aplicar provas de perguntas (estilo xadrez) desenvolvido em Java 25. O repositório contém a versão **refatorada** do sistema original, com o objetivo de aplicar integralmente os 5 princípios SOLID, garantindo um código limpo, testável e extensível.
+Olá! Bem-vindo(a) ao repositório do **Olimpíada de Questões**, um sistema interativo via terminal (CLI) projetado para aplicar provas com foco em desafios de xadrez.
 
-## 🛠️ Tecnologias
-- Java 25
-- Maven (com wrapper)
-- JUnit 5.10.2
+Este projeto nasceu como uma refatoração de um código existente construído em **Java 25**. O grande objetivo aqui foi pegar um código que funcionava e transformá-lo num código **limpo**, aplicando do começo ao fim os **5 princípios do código SOLID**, mas com um desafio extra: **não mudar a lógica de negócio, não remover funcionalidades que o usuário já tinha acesso e sem instalar nenhum framework gigante** da vida real (como Spring Boot).
 
-## 🔄 Resumo das Mudanças (SOLID)
+## 🛠️ Tecnologias que usamos
+- **Java 25** (pura e direta!)
+- **Maven** (Usando o Wrapper, então você nem precisa instalar ele solto na sua máquina)
+- **JUnit 5.10** (A base de testes está montada e compila!)
 
-A versão original continha um "God Object" (`App.java`) que possuía quase 400 linhas e misturava lógica de menu interativo, banco de dados em memória (listas estáticas), validação de regras de negócio, e até a renderização visual do tabuleiro de Xadrez (Notação FEN).
+## 🚀 Resumo da Jornada SOLID
 
-A refatoração dividiu a responsabilidade em camadas (`model`, `repository`, `service`, `ui`, `seed`), respeitando as restrições originais de não adicionar novos frameworks ou alterar a funcionalidade exposta ao usuário. 
+O projeto original sofria um grande mal: a famosa "Classe Deus" (`App.java` com as suas 400 linhas). A classe de entrada cuidava do menu, da "banco de dados" em listas estáticas, validava dados, guardava regras de domínio e ainda por cima desenhava um tabuleiro FEN no painel do console. Era muito fardo nas costas dela!
 
-Abaixo estão detalhados os 5 princípios aplicados:
+Aqui está como tratamos e dividimos essa aplicação aplicando os grandes princípios orientados a objeto:
 
-### 1. S - Single Responsibility Principle (SRP)
-- **Como foi aplicado:** A classe `App` foi completamente diluída. Em seu lugar, criamos subpacotes.
-  - O acesso a dados (antigas coleções `static List<>`) foi extraído para classes `*RepositoryMemoria`.
-  - As regras de validação, criação, e cálculos de notas foram extraídas para classes `*Service`.
-  - O desenho do menu interativo e leitura do console (`Scanner`) foi transferido para `ConsoleUI`.
-  - A renderização do tabuleiro FEN foi isolada no `TabuleiroRenderer`.
-  - A injeção inicial de dados (Olimpíada de Xadrez) foi transferida para `DataSeeder`.
+### 🎒 **1. Princípio da Responsabilidade Única (SRP)**
+Deixamos a classe `App` respirar aliviada, criando caixinhas pra cada parte da lógica:
+- Tiramos a leitura do teclado e impressões do console e botamos no `ConsoleUI`. Ah, e a renderização maluca de matrizes no console? Fica lindamente no `TabuleiroRenderer`.
+- Todo o processamento lógico foi para os novos arquivos `*Service`. O serviço coordena as validações e as ações.
+- Criamos a nossa pseudo "camada de Dados", movendo o controle dos contadores de ID e o controle das listas `List<Model>` para dentro de arquivos da pasta `repository/`.
+- Os dados inaugurais (o famoso seed de testes rápidos com os lances já valendo ponto) foram pro cantinho deles no `DataSeeder`.
 
-### 2. O - Open/Closed Principle (OCP)
-- **Como foi aplicado:** A classe base `Questao` foi transformada num modelo **abstrato**, possuindo métodos genéricos de `isRespostaCorreta(char)` e `getAlternativas()`. Todo o comportamento original para questões de múltipla escolha (A-E) foi inserido em uma nova classe concreta `QuestaoMultiplaEscolha`. Deste modo o sistema agora está *aberto à extensão* para novos tipos de perguntas (V/F, dissertativa, etc) e *fechado para modificação* das classes principais do serviço.
+### 🧩 **2. Princípio do Aberto/Fechado (OCP)**
+Se amanhã inventarem que a prova precisa de uma questão de "Verdadeiro e Falso"? Hoje a `Questao` não passa mais sufoco.
+Transformamos a classe `Questao` num modelo básico **abstrato**, pronto para se transformar e expandir pro que vier. Toda a base das perguntas clássicas e o seu painel de verificação foi alocado na super específica classe `QuestaoMultiplaEscolha`. Conclusão: estamos *abertos para a extensão* de tipos, mas o esqueleto do sistema se manteve *fechado para ser tocado a todo momento*.
 
-### 3. L - Liskov Substitution Principle (LSP)
-- **Como foi aplicado:** Garantimos as validações essenciais instanciando os invariantes diretos dentro de *Setters* dos objetos modelo (ex: validação de nulo em `Participante/Prova`), garantindo que não se construam entidades inválidas que causem erros na camada de serviço. Além disso, a classe `Resposta` foi alterada para aceitar subrespostas via `String` ao invés de `char`, fortalecendo os contratos para que qualquer tipo futuro polimórfico de `Questao` funcione nativamente nos serviços.
+### 🔄 **3. Princípio da Substituição de Liskov (LSP)**
+Nenhum objeto ruim é jogado na cara das camadas dos Serviços. Blindamos o comportamento natural dos Modelos. Exemplo prático: O `Participante` não deixa mais colocarem seu nome vazio (lançando os bloqueios já nos seus próprios Setters).  Foi reajustada também flexibilidade da classe que carrega os pontos: `Resposta` não funciona de maneira restrita aos `char` ("A, B, C"); ele assume um viés mais polivalente em forma de String. Agora, os subtipos (classes-filhas) de `Questao` e os resultados conversam em harmonia total e com naturalidade entre si!
 
-### 4. I - Interface Segregation Principle (ISP)
-- **Como foi aplicado:** Nós desassociamos classes diretas em componentes de interface dedicados a operações restritas para cada consumidor de dependência:
-  - Adicionado interface `Repositorio<T>` genérica.
-  - Adicionado interface restrita `QuestaoRepositorio` que se limita a prover buscas por IDs de prova específicos.
-  - Adicionado interface `EntradaSaida` para métodos de tela, e interface especifica `Renderizador` permitindo customizar a maneira com que os dados (como tabuleiros) são exportados (Console, JSON log, etc).
-  - Adicionado interface limitadora `CalculadorNota` separando o dever de calcular aciertos sem ter acesso a modificador de `Tentativa`.
+### 🔪 **4. Princípio da Segregação de Interface (ISP)**
+Criar interfaces generalistas é ruim. Fizemos "micro-contratos". As classes consumidoras não herdam funções lixo da qual ignorariam o uso:
+- Quem acessa os dados vê apenas a interface `Repositorio<T>`.
+- Quem vai pesquisar filtros de questões olha focado para a `QuestaoRepositorio`.
+- Para o visual existe os papéis isolados da interface `EntradaSaida` contra a focada num único tipo output da interface `Renderizador`.
 
-### 5. D - Dependency Inversion Principle (DIP)
-- **Como foi aplicado:** As camadas superiores (*Services* e *App*) agora operam baseadas puramente nas interfaces (ex: injetando via construtor `Repositorio<Participante>` ao invés da classe sólida). A *Composition Root* (`App.main()`) foi mantida como único lugar ciente das classes concretas injetáveis (`ParticipanteRepositoryMemoria`, `CalculadorNotaSimples`), o sistema é totalmente invertível.
+### 🔌 **5. Princípio da Inversão de Dependência (DIP)**
+Camadas de alto nível não dependem de implementações burras e rústicas de baixo nível! Agora os serviços todos trabalham sob regência das interfaces. Por exemplo: o `TentativaService` é instanciado recebendo de injeção externa seu humilde construtor de repositório e alguém que saiba a função naturalística de um `CalculadorNota`. O único ponto focal que espirra o mundo concreto é mantido numa bolha protegida na **Composition Root** onde a main inicializa tudo: ela faz as "matrículas" reais pros services (`ParticipanteRepositoryMemoria`, `CalculadorNotaSimples`), amarrando a inversão lindamente.
 
-## 🚀 Como Executar
+---
 
-Compile e inicie o sistema utilizando os comandos Maven Wrapper presentes no repositório:
+## 🎮 Quero matar minhas saudades. Como rodar?
 
+Dê seus checks nesses comandos no terminal (pode ser o Powershell, Git Bash ou Cmd mesmo) na pasta do projeto e o jogo via CLI ganha vida novamente:
+
+**1. Rodando a limpeza da casa e subindo o projeto compilado:**
 ```bash
-# Para compilar o projeto:
 ./mvnw.cmd clean compile
+```
 
-# Para testar:
+**2. Passando as baterias dos testes pra garantir saúde total:**
+```bash
 ./mvnw.cmd test
+```
 
-# Para executar a CLI:
+**3. Jogando:**
+```bash
 ./mvnw.cmd exec:java -Dexec.mainClass="br.com.ucsal.olimpiadas.App"
 ```
+
+Obrigado pela visita, esperamos que esse pequeno playground de Arquitetura Limpa possa ter provado a força do uso dos Padrões (Design Patterns)! ♔♕♖♗♘♙
