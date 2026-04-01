@@ -1,62 +1,40 @@
-# ♟️ Olimpíada de Questões — Minha Refatoração SOLID
+# Olimpíada de Questões - Minha Refatoração SOLID
 
-Olá! Bem-vindo(a) ao repositório do **Olimpíada de Questões**, um sistema interativo via terminal (CLI) que projetei para aplicar provas com foco em desafios de xadrez.
+Eai pessoal, aqui é o Ivã! 
 
-Aqui é o Ivã. Este projeto nasceu do meu esforço em pegar um código existente construído em **Java 25** e transformá-lo num código **limpo**, aplicando do começo ao fim os **5 princípios do SOLID**. O meu grande desafio pessoal foi realizar isso **sem mudar a lógica de negócio, sem remover funcionalidades e sem instalar nenhum framework gigante** (como o Spring Boot). Mão na massa, código puro!
+Esse repositório é do meu trabalho de faculdade sobre o jogo de Olimpíada de Questões (um esquema meio de xadrez) no terminal. O código original em Java 25 tava funcionando mas era tipo um espaguete de código. Minha missão foi pegar isso e aplicar aqueles 5 princípios do SOLID que a gente estuda. Deu um trabalhão pq eu não podia mudar a lógica que já funcionava e nem usar coisas como Spring, tive q fazer tudo no braço.
 
-## 🛠️ Tecnologias que decidi manter
-- **Java 25** (pura e direta!)
-- **Maven** (Usando o Wrapper, então você nem precisa ter instalado na sua máquina)
-- **JUnit 5.10** (Base de testes montada e compilando lisinho)
+Aqui embaixo eu explico mais ou menos como eu enxerguei e fiz cada parte:
 
-## 🚀 Resumo da Minha Jornada SOLID
+### 1. SRP (Responsabilidade Única)
+Antes tava tudo socado dentro do `App.java`. Era menu, lista de dados cravada lá dentro, validação e até o desenho do tabuleiro. Eu tirei tudo de lá.
+Criei a pastinha `repository/` pra guardar as listas de dados finjindo que é um banco. Criei os `Service` pra fazer as regras e um `ConsoleUI` pra lidar com aquele scanner chato de ler teclado. 
 
-Quando comecei, o projeto original sofria de um mal clássico: a famosa "Classe Deus" (`App.java` com as suas assustadoras 400 linhas). Essa única classe de entrada cuidava do menu iterativo, servia de "banco de dados" segurando listas estáticas, validava os dados, controlava o domínio e para piorar, imprimia um tabuleiro de xadrez FEN inteiro no console. 
+### 2. OCP (Aberto/Fechado)
+Mudei a classe `Questao` pra ser abstrata. Eu não sabia se depois a gente ia precisar fazer questão de Certo ou Errado além de ser A,B,C,D. Então eu fiz uma classe separada `QuestaoMultiplaEscolha` q herda dela. Assim se alguém quiser inventar moda depois, é só criar outra classe e não precisa mexer muito na classe velha.
 
-Para resolver isso, estruturei a aplicação separando o peso nos princípios clássicos orientados a objeto. Veja como fiz:
+### 3. LSP (Substituição Liskov)
+Esse eu dei umas travadas mas a ideia foi blindar os meus models. O `Participante` não deixa colocar nome em branco agora já nos seters. E na `Resposta` eu mudei de char pra String pra caso uma questão mude no futuro, o serviço vai aceitar sem quebrar, já que eu arrumei as respostas pra ser tudo String de qualquer jeito pros filhos de Questao conversarem legal.
 
-### 🎒 **1. Princípio da Responsabilidade Única (SRP)**
-Deixei a classe `App` respirar aliviada, criando módulos específicos para cada pedaço da lógica:
-- Tirei a leitura do teclado e impressões do console e movi para uma nova classe `ConsoleUI`. E aquela renderização maluca de matrizes no console? Isolei lindamente no meu `TabuleiroRenderer`.
-- Todo o processamento e regras foram transferidos para as classes `*Service`. O serviço é quem coordena tudo agora.
-- Criei uma pseudo "camada de Dados", movendo o controle dos contadores de ID e as listas `List<Model>` para dentro dos arquivos do `repository/`.
-- Deixei os dados obrigatórios e as seeds de inicialização bem isolados no meu `DataSeeder`.
+### 4. ISP (Segregação de Interface)
+Eu via q tava tudo misturado então eu fiz um monte de interface pequena em vez de uma grandona. Criei o `Repositorio<T>`, `QuestaoRepositorio` pra umas coisas especificas, `Renderizador` pra parte do tabuleiro. Funciona bem porque cada classe q precisar só vai usar oq interessa pra ela.
 
-### 🧩 **2. Princípio do Aberto/Fechado (OCP)**
-Pensei: "E se futuramente eu quiser adicionar uma prova de 'Verdadeiro e Falso'?"
-Transformei a minha classe `Questao` num modelo básico **abstrato**, pronto para se desdobrar no que vier. Todo o comportamento base sobre as alternativas foi para minha nova subclasse super específica `QuestaoMultiplaEscolha`. Conclusão: mantive minha fundação *fechada para ser alterada* loucamente, mas *aberta à extensões* infinitas de tipos de questões!
-
-### 🔄 **3. Princípio da Substituição de Liskov (LSP)**
-Eu não queria que nenhum dado inconsistente quebrasse minha camada de Serviço. Para isso, blindei o comportamento natural dos meus modelos. O meu `Participante`, por exemplo, não permite que setem nomes vazios; ele já bloqueia em seu próprio método *Setter*, definindo Invariantes fortes. Reajustei a classe de `Resposta` para guardar de forma polivalente (usando String no lugar de um Char fixo) o seu valor. Assim, eu garanto as respostas compatíveis independente que de meus filhos herdeiros da minha classe abstrata `Questao` respondam no futuro. Tudo conversa sem sobressaltos e sem usar instaceOf!
-
-### 🔪 **4. Princípio da Segregação de Interface (ISP)**
-Criar interfaces gigantes não era meu foco. Criei "micro-contratos"! Minhas classes não assinam funções pesadas que não precisam:
-- Os acessos a banco agora utilizam a interface enxuta `Repositorio<T>`.
-- Para acessar minhas filtragens, basta olhar para a `QuestaoRepositorio`.
-- Separei a ideia de renderização visual: fiz minha interface `EntradaSaida` para o scanner básico de menus, mas deixei a interface `Renderizador` solta para cuidar de imagens, como no xadrez.
-
-### 🔌 **5. Princípio da Inversão de Dependência (DIP)**
-Por fim, me recusei a acoplar minhas camadas de alto nível em bancos de baixo nível primitivos. Agora todos os meus `Services` recebem Interfaces (abstrações) injetadas de fora. Tome por exemplo meu `TentativaService`: ele é criado no seu construtor exigindo o repositório de interfaces e algo que assine o conceito de `CalculadorNota`. Consegui concentrar toda essa inicialização bruta de infraestrutura numa camada raiz segura, a minha famosa **Composition Root** (na própria main do `App`), que repassa o controle invertido para todas as dependências do meu projeto. 
+### 5. DIP (Inversão de Dependência)
+Essa foi a pra fechar. Eu tirei as dependencias cravadas nos serviços. Todo o serviço meu tipo `TentativaService` agora recebe as interfaces no construtor. Pra ficar facil, o `App.java` la na main é que instancia o `TentativaRepositoryMemoria` real e joga pra dentro do serviço. Pelo menos ficou mais facil se quiser trocar o banco depois.
 
 ---
 
-## 🎮 Quero testar! Como rodo sua aplicação?
+## Como rodar ai no seu pc
 
-Eu facilitei o trabalho. Pode rodar os comandos no seu terminal favorito dentro dessa pasta que a CLI levanta direto:
+Abram o terminal (eu uso o cmd ou powershell msm) na pasta e rodem:
 
-**1. Limpando a casa e compilando a minha versão:**
-```bash
-./mvnw.cmd clean compile
-```
+Pra compilar antes:
+`.\mvnw.cmd clean compile`
 
-**2. Passando as baterias de testes para atestar o funcionamento:**
-```bash
-./mvnw.cmd test
-```
+Se quiser ver se os testes tão ok:
+`.\mvnw.cmd test`
 
-**3. Jogando meu sistema:**
-```bash
-./mvnw.cmd exec:java -Dexec.mainClass="br.com.ucsal.olimpiadas.App"
-```
+E pra abrir o jogo pra jogar:
+`.\mvnw.cmd exec:java -Dexec.mainClass="br.com.ucsal.olimpiadas.App"`
 
-Obrigado por conferir o projeto! Gostei muito do aprendizado aplicando Design Patterns clássicos de Arquitetura Limpa aqui. Câmbio desligo! ♔♕♖♗♘♙
+É isso. Valeuu!
