@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ParticipanteRepository {
+public class ParticipanteRepository implements Repositorio<Participante> {
 	private long proximoId = 1;
 	private final List<Participante> dados = new ArrayList<>();
 

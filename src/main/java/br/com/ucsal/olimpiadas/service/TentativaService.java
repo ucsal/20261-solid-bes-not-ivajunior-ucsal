@@ -7,9 +7,11 @@ import java.util.List;
 
 public class TentativaService {
 	private final TentativaRepository repository;
+	private final CalculadorNota calculadorNota;
 
-	public TentativaService(TentativaRepository repository) {
+	public TentativaService(TentativaRepository repository, CalculadorNota calculadorNota) {
 		this.repository = repository;
+		this.calculadorNota = calculadorNota;
 	}
 
 	public Tentativa salvar(Tentativa tentativa) {
@@ -17,12 +19,7 @@ public class TentativaService {
 	}
 
 	public int calcularNota(Tentativa tentativa) {
-		int acertos = 0;
-		for (var r : tentativa.getRespostas()) {
-			if (r.isCorreta())
-				acertos++;
-		}
-		return acertos;
+		return calculadorNota.calcular(tentativa);
 	}
 
 	public List<Tentativa> listarTodas() {

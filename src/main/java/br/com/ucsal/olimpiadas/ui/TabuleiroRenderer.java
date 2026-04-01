@@ -1,6 +1,8 @@
 package br.com.ucsal.olimpiadas.ui;
 
-public class TabuleiroRenderer {
+public class TabuleiroRenderer implements Renderizador {
+
+	@Override
 
 	public void renderizar(String fen) {
 

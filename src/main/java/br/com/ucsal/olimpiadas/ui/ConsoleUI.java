@@ -6,7 +6,7 @@ import br.com.ucsal.olimpiadas.model.Prova;
 import java.util.List;
 import java.util.Scanner;
 
-public class ConsoleUI {
+public class ConsoleUI implements EntradaSaida {
 	private final Scanner scanner;
 
 	public ConsoleUI(Scanner scanner) {

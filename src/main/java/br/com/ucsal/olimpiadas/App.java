@@ -10,6 +10,7 @@ import br.com.ucsal.olimpiadas.repository.ProvaRepository;
 import br.com.ucsal.olimpiadas.repository.QuestaoRepository;
 import br.com.ucsal.olimpiadas.repository.TentativaRepository;
 import br.com.ucsal.olimpiadas.seed.DataSeeder;
+import br.com.ucsal.olimpiadas.service.CalculadorNotaSimples;
 import br.com.ucsal.olimpiadas.service.ParticipanteService;
 import br.com.ucsal.olimpiadas.service.ProvaService;
 import br.com.ucsal.olimpiadas.service.QuestaoService;
@@ -205,7 +206,7 @@ public class App {
 		var participanteService = new ParticipanteService(participanteRepo);
 		var provaService = new ProvaService(provaRepo);
 		var questaoService = new QuestaoService(questaoRepo);
-		var tentativaService = new TentativaService(tentativaRepo);
+		var tentativaService = new TentativaService(tentativaRepo, new CalculadorNotaSimples());
 
 		new DataSeeder(provaRepo, questaoRepo).executar();
 
