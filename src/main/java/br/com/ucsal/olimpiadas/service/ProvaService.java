@@ -13,9 +13,6 @@ public class ProvaService {
 	}
 
 	public Prova cadastrar(String titulo) {
-		if (titulo == null || titulo.isBlank()) {
-			throw new IllegalArgumentException("título inválido");
-		}
 		var prova = new Prova();
 		prova.setTitulo(titulo);
 		return repository.salvar(prova);

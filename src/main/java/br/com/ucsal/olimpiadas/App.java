@@ -172,7 +172,7 @@ public class App {
 
 			var r = new Resposta();
 			r.setQuestaoId(q.getId());
-			r.setAlternativaMarcada(marcada);
+			r.setAlternativaMarcada(String.valueOf(marcada));
 			r.setCorreta(q.isRespostaCorreta(marcada));
 
 			tentativa.getRespostas().add(r);

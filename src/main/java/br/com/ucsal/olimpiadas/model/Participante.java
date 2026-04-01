@@ -18,6 +18,9 @@ public class Participante {
 	}
 
 	public void setNome(String nome) {
+		if (nome == null || nome.isBlank()) {
+			throw new IllegalArgumentException("nome inválido");
+		}
 		this.nome = nome;
 	}
 

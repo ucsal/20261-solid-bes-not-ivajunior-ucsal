@@ -13,9 +13,6 @@ public class ParticipanteService {
 	}
 
 	public Participante cadastrar(String nome, String email) {
-		if (nome == null || nome.isBlank()) {
-			throw new IllegalArgumentException("nome inválido");
-		}
 		var p = new Participante();
 		p.setNome(nome);
 		p.setEmail(email);
