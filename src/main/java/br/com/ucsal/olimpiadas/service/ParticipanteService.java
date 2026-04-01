@@ -1,14 +1,14 @@
 package br.com.ucsal.olimpiadas.service;
 
 import br.com.ucsal.olimpiadas.model.Participante;
-import br.com.ucsal.olimpiadas.repository.ParticipanteRepository;
+import br.com.ucsal.olimpiadas.repository.Repositorio;
 
 import java.util.List;
 
 public class ParticipanteService {
-	private final ParticipanteRepository repository;
+	private final Repositorio<Participante> repository;
 
-	public ParticipanteService(ParticipanteRepository repository) {
+	public ParticipanteService(Repositorio<Participante> repository) {
 		this.repository = repository;
 	}
 

@@ -2,14 +2,14 @@ package br.com.ucsal.olimpiadas.seed;
 
 import br.com.ucsal.olimpiadas.model.Prova;
 import br.com.ucsal.olimpiadas.model.QuestaoMultiplaEscolha;
-import br.com.ucsal.olimpiadas.repository.ProvaRepository;
-import br.com.ucsal.olimpiadas.repository.QuestaoRepository;
+import br.com.ucsal.olimpiadas.repository.Repositorio;
+import br.com.ucsal.olimpiadas.repository.QuestaoRepositorio;
 
 public class DataSeeder {
-	private final ProvaRepository provaRepository;
-	private final QuestaoRepository questaoRepository;
+	private final Repositorio<Prova> provaRepository;
+	private final QuestaoRepositorio questaoRepository;
 
-	public DataSeeder(ProvaRepository provaRepository, QuestaoRepository questaoRepository) {
+	public DataSeeder(Repositorio<Prova> provaRepository, QuestaoRepositorio questaoRepository) {
 		this.provaRepository = provaRepository;
 		this.questaoRepository = questaoRepository;
 	}

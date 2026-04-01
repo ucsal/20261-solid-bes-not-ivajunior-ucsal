@@ -2,14 +2,14 @@ package br.com.ucsal.olimpiadas.service;
 
 import br.com.ucsal.olimpiadas.model.Questao;
 import br.com.ucsal.olimpiadas.model.QuestaoMultiplaEscolha;
-import br.com.ucsal.olimpiadas.repository.QuestaoRepository;
+import br.com.ucsal.olimpiadas.repository.QuestaoRepositorio;
 
 import java.util.List;
 
 public class QuestaoService {
-	private final QuestaoRepository repository;
+	private final QuestaoRepositorio repository;
 
-	public QuestaoService(QuestaoRepository repository) {
+	public QuestaoService(QuestaoRepositorio repository) {
 		this.repository = repository;
 	}
 

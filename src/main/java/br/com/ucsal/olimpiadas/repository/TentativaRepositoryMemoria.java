@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TentativaRepository implements Repositorio<Tentativa> {
+public class TentativaRepositoryMemoria implements Repositorio<Tentativa> {
 	private long proximoId = 1;
 	private final List<Tentativa> dados = new ArrayList<>();
 

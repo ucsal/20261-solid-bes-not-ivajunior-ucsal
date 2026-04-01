@@ -5,10 +5,10 @@ import java.util.Scanner;
 import br.com.ucsal.olimpiadas.model.Questao;
 import br.com.ucsal.olimpiadas.model.Resposta;
 import br.com.ucsal.olimpiadas.model.Tentativa;
-import br.com.ucsal.olimpiadas.repository.ParticipanteRepository;
-import br.com.ucsal.olimpiadas.repository.ProvaRepository;
-import br.com.ucsal.olimpiadas.repository.QuestaoRepository;
-import br.com.ucsal.olimpiadas.repository.TentativaRepository;
+import br.com.ucsal.olimpiadas.repository.ParticipanteRepositoryMemoria;
+import br.com.ucsal.olimpiadas.repository.ProvaRepositoryMemoria;
+import br.com.ucsal.olimpiadas.repository.QuestaoRepositoryMemoria;
+import br.com.ucsal.olimpiadas.repository.TentativaRepositoryMemoria;
 import br.com.ucsal.olimpiadas.seed.DataSeeder;
 import br.com.ucsal.olimpiadas.service.CalculadorNotaSimples;
 import br.com.ucsal.olimpiadas.service.ParticipanteService;
@@ -195,10 +195,10 @@ public class App {
 	}
 
 	public static void main(String[] args) {
-		var participanteRepo = new ParticipanteRepository();
-		var provaRepo = new ProvaRepository();
-		var questaoRepo = new QuestaoRepository();
-		var tentativaRepo = new TentativaRepository();
+		var participanteRepo = new ParticipanteRepositoryMemoria();
+		var provaRepo = new ProvaRepositoryMemoria();
+		var questaoRepo = new QuestaoRepositoryMemoria();
+		var tentativaRepo = new TentativaRepositoryMemoria();
 
 		var ui = new ConsoleUI(new Scanner(System.in));
 		var tabuleiroRenderer = new TabuleiroRenderer();

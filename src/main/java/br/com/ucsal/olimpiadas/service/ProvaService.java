@@ -1,14 +1,14 @@
 package br.com.ucsal.olimpiadas.service;
 
 import br.com.ucsal.olimpiadas.model.Prova;
-import br.com.ucsal.olimpiadas.repository.ProvaRepository;
+import br.com.ucsal.olimpiadas.repository.Repositorio;
 
 import java.util.List;
 
 public class ProvaService {
-	private final ProvaRepository repository;
+	private final Repositorio<Prova> repository;
 
-	public ProvaService(ProvaRepository repository) {
+	public ProvaService(Repositorio<Prova> repository) {
 		this.repository = repository;
 	}
 

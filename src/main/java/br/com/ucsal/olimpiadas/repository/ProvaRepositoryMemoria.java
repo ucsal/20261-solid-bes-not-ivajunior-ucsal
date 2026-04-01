@@ -1,22 +1,22 @@
 package br.com.ucsal.olimpiadas.repository;
 
-import br.com.ucsal.olimpiadas.model.Participante;
+import br.com.ucsal.olimpiadas.model.Prova;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ParticipanteRepository implements Repositorio<Participante> {
+public class ProvaRepositoryMemoria implements Repositorio<Prova> {
 	private long proximoId = 1;
-	private final List<Participante> dados = new ArrayList<>();
+	private final List<Prova> dados = new ArrayList<>();
 
-	public Participante salvar(Participante p) {
+	public Prova salvar(Prova p) {
 		p.setId(proximoId++);
 		dados.add(p);
 		return p;
 	}
 
-	public List<Participante> listarTodos() {
+	public List<Prova> listarTodos() {
 		return Collections.unmodifiableList(dados);
 	}
 
