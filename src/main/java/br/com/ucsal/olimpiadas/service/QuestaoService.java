@@ -1,6 +1,7 @@
 package br.com.ucsal.olimpiadas.service;
 
 import br.com.ucsal.olimpiadas.model.Questao;
+import br.com.ucsal.olimpiadas.model.QuestaoMultiplaEscolha;
 import br.com.ucsal.olimpiadas.repository.QuestaoRepository;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class QuestaoService {
 	}
 
 	public Questao cadastrar(long provaId, String enunciado, String[] alternativas, char correta) {
-		var q = new Questao();
+		var q = new QuestaoMultiplaEscolha();
 		q.setProvaId(provaId);
 		q.setEnunciado(enunciado);
 		q.setAlternativas(alternativas);

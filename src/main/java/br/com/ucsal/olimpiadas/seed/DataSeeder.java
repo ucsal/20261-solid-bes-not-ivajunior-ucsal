@@ -1,7 +1,7 @@
 package br.com.ucsal.olimpiadas.seed;
 
 import br.com.ucsal.olimpiadas.model.Prova;
-import br.com.ucsal.olimpiadas.model.Questao;
+import br.com.ucsal.olimpiadas.model.QuestaoMultiplaEscolha;
 import br.com.ucsal.olimpiadas.repository.ProvaRepository;
 import br.com.ucsal.olimpiadas.repository.QuestaoRepository;
 
@@ -20,7 +20,7 @@ public class DataSeeder {
 		prova.setTitulo("Olimpíada 2026 • Nível 1 • Prova A");
 		provaRepository.salvar(prova);
 
-		var q1 = new Questao();
+		var q1 = new QuestaoMultiplaEscolha();
 		q1.setProvaId(prova.getId());
 
 		q1.setEnunciado("""
